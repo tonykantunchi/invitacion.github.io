@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Graduación — Angel Antonio | Ing. Informática 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
@@ -19,13 +19,15 @@
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { font-size: 16px; }
+
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       color: var(--white);
       min-height: 100vh;
+      min-height: 100dvh;
       overflow-x: hidden;
-      transition: background 0.2s;
     }
 
     /* ══ SHAKE FLASH ══ */
@@ -37,92 +39,84 @@
     }
     #shake-flash.active { opacity: 1; }
 
-    /* ══ HACK ALERT OVERLAY ══ */
+    /* ══ HACK ALERT ══ */
     #hack-alert {
       position: fixed; inset: 0; z-index: 9000;
-      background: rgba(180, 0, 0, 0.92);
+      background: rgba(160, 0, 0, 0.94);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       opacity: 0; pointer-events: none;
       transition: opacity 0.3s;
-      backdrop-filter: blur(4px);
+      padding: 24px;
     }
     #hack-alert.active { opacity: 1; pointer-events: all; }
     #hack-alert-inner {
       text-align: center;
       animation: alertShake 0.15s infinite;
+      width: 100%; max-width: 340px;
     }
     @keyframes alertShake {
       0%,100% { transform: translateX(0); }
-      25% { transform: translateX(-6px) rotate(-1deg); }
-      75% { transform: translateX(6px) rotate(1deg); }
+      25% { transform: translateX(-5px) rotate(-1deg); }
+      75% { transform: translateX(5px) rotate(1deg); }
     }
-    .alert-icon { font-size: 5rem; margin-bottom: 16px; }
+    .alert-icon { font-size: 4rem; margin-bottom: 12px; }
     .alert-title {
       font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: clamp(1.8rem, 6vw, 3.2rem);
+      font-size: clamp(1.6rem, 7vw, 2.4rem);
       color: #fff; text-shadow: 0 0 30px rgba(255,100,100,0.8);
-      letter-spacing: 0.04em; margin-bottom: 12px;
+      letter-spacing: 0.04em; margin-bottom: 10px;
     }
     .alert-sub {
       font-family: 'Share Tech Mono', monospace;
-      font-size: clamp(0.85rem, 2.5vw, 1.1rem);
-      color: rgba(255,255,255,0.85); letter-spacing: 0.12em;
-      margin-bottom: 8px;
+      font-size: clamp(0.8rem, 3.5vw, 1rem);
+      color: rgba(255,255,255,0.85); letter-spacing: 0.1em;
+      margin-bottom: 6px; padding: 0 8px;
     }
     .alert-countdown {
-      font-family: 'Share Tech Mono', monospace; font-size: 1rem;
-      color: rgba(255,200,200,0.7); margin-top: 16px; letter-spacing: 0.1em;
-    }
-    .alert-scanlines {
-      position: absolute; inset: 0;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 3px,
-        rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
-      );
-      pointer-events: none;
+      font-family: 'Share Tech Mono', monospace; font-size: 0.9rem;
+      color: rgba(255,200,200,0.7); margin-top: 14px; letter-spacing: 0.1em;
     }
     .alert-blink { animation: blinkAlert 0.6s infinite; }
     @keyframes blinkAlert { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    /* ══ HACKER MODE BTN ══ */
+    /* ══ HACKER BTN ══ */
     #btn-hacker-mode {
-      position: fixed; bottom: 24px; right: 24px; z-index: 500;
-      width: 58px; height: 58px; border-radius: 50%;
+      position: fixed; bottom: 20px; right: 20px; z-index: 500;
+      width: 54px; height: 54px; border-radius: 50%;
       background: linear-gradient(135deg, #1a0000, #3d0000);
       border: 2px solid rgba(255,60,60,0.4);
       display: none; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 1.5rem;
+      cursor: pointer; font-size: 1.4rem;
       box-shadow: 0 0 20px rgba(255,0,0,0.2);
       transition: all 0.3s; user-select: none;
       -webkit-user-select: none;
       touch-action: none;
+      -webkit-tap-highlight-color: transparent;
     }
     #btn-hacker-mode.visible { display: flex; }
-    #btn-hacker-mode:hover { box-shadow: 0 0 40px rgba(255,0,0,0.5); border-color: rgba(255,60,60,0.8); }
     .hacker-progress {
       position: absolute; inset: -2px; border-radius: 50%;
       background: conic-gradient(#ff3030 0deg, transparent 0deg);
       transition: background 0.05s;
-      border-radius: 50%;
       z-index: -1;
     }
 
-    /* ══ MATRIX BG ══ */
+    /* ══ CANVAS BG ══ */
     #matrix-canvas {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
-      z-index: 0; opacity: 0.1;
+      z-index: 0; opacity: 0.08;
       transition: opacity 2s ease;
     }
-    #matrix-canvas.visible { opacity: 0.2; }
+    #matrix-canvas.visible { opacity: 0.15; }
 
     .grid-overlay {
       position: fixed; inset: 0; z-index: 0;
       background-image:
-        linear-gradient(rgba(0,230,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,230,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px; pointer-events: none;
+        linear-gradient(rgba(0,230,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,230,255,0.025) 1px, transparent 1px);
+      background-size: 50px 50px; pointer-events: none;
     }
 
     #matrix-overlay {
@@ -135,7 +129,7 @@
     .vignette {
       position: fixed; inset: 0; z-index: 2; pointer-events: none;
       background: radial-gradient(ellipse at center,
-        transparent 25%, rgba(5,8,16,0.6) 65%, rgba(5,8,16,0.9) 100%);
+        transparent 20%, rgba(5,8,16,0.55) 65%, rgba(5,8,16,0.92) 100%);
       opacity: 0; transition: opacity 2s ease 0.6s;
     }
     .vignette.show { opacity: 1; }
@@ -153,34 +147,37 @@
       position: fixed; inset: 0; z-index: 10;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 36px;
+      gap: 28px;
+      padding: 20px;
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
     #envelope-scene.hide {
-      opacity: 0; transform: scale(0.9) translateY(-30px); pointer-events: none;
+      opacity: 0; transform: scale(0.9) translateY(-20px); pointer-events: none;
     }
 
     .env-hint {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 0.8rem; letter-spacing: 0.2em;
+      font-size: 0.75rem; letter-spacing: 0.18em;
       color: var(--cyan); text-align: center;
       animation: pulse 2s infinite;
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
     .envelope {
-      width: min(440px, 88vw); position: relative; cursor: pointer;
-      perspective: 1200px; filter: drop-shadow(0 0 40px rgba(0,230,255,0.2));
+      width: min(380px, 92vw); position: relative; cursor: pointer;
+      perspective: 1200px;
+      filter: drop-shadow(0 0 32px rgba(0,230,255,0.2));
       transition: filter 0.3s;
+      -webkit-tap-highlight-color: transparent;
     }
-    .envelope:hover { filter: drop-shadow(0 0 70px rgba(0,230,255,0.45)); }
+    .envelope:hover, .envelope:active { filter: drop-shadow(0 0 60px rgba(0,230,255,0.45)); }
 
     .click-indicator {
-      position: absolute; bottom: -50px; left: 50%;
+      position: absolute; bottom: -44px; left: 50%;
       transform: translateX(-50%);
-      font-family: 'Share Tech Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.18em; color: rgba(0,230,255,0.6);
-      display: flex; align-items: center; gap: 8px;
+      font-family: 'Share Tech Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.16em; color: rgba(0,230,255,0.6);
+      display: flex; align-items: center; gap: 6px;
       animation: floatHint 2s ease-in-out infinite; white-space: nowrap;
     }
     .click-indicator::before { content: '▼'; animation: bounce 1.2s ease-in-out infinite; }
@@ -206,20 +203,20 @@
     }
     .envelope.open .env-inner-glow { opacity: 1; }
     .env-stamp {
-      position: absolute; top: 10px; right: 14px;
-      width: 44px; height: 54px; border: 1px solid rgba(255,215,0,0.35);
+      position: absolute; top: 10px; right: 12px;
+      width: 40px; height: 50px; border: 1px solid rgba(255,215,0,0.35);
       background: rgba(255,215,0,0.05); border-radius: 3px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; z-index: 3;
+      font-size: 1.3rem; z-index: 3;
     }
     .env-center {
       position: absolute; inset: 0;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center; z-index: 2; gap: 6px;
+      align-items: center; justify-content: center; z-index: 2; gap: 4px;
     }
-    .env-to-tag { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 0.22em; color: rgba(0,230,255,0.5); }
-    .env-to-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; color: rgba(240,248,255,0.8); }
-    .env-from { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; color: rgba(240,248,255,0.25); margin-top: 2px; }
+    .env-to-tag { font-family: 'Share Tech Mono', monospace; font-size: 0.55rem; letter-spacing: 0.2em; color: rgba(0,230,255,0.5); }
+    .env-to-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: rgba(240,248,255,0.8); }
+    .env-from { font-family: 'Share Tech Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; color: rgba(240,248,255,0.25); margin-top: 2px; }
     .env-flap-wrap { position: absolute; top: 0; left: 0; right: 0; height: 0; z-index: 4; }
     .env-flap { width: 100%; transform-origin: top center; transform-style: preserve-3d; transition: transform 0.75s cubic-bezier(0.35, 0, 0.15, 1); position: relative; }
     .env-flap-face {
@@ -231,22 +228,22 @@
     .envelope.open .env-flap { transform: rotateX(-175deg); }
     .letter-peek {
       position: absolute; bottom: 0; left: 50%;
-      transform: translateX(-50%) translateY(0px); width: 88%;
+      transform: translateX(-50%) translateY(0px); width: 86%;
       background: linear-gradient(160deg, #0e2448 0%, #091a36 100%);
       border: 1px solid rgba(0,230,255,0.22); border-bottom: none;
-      border-radius: 8px 8px 0 0; padding: 12px 20px 8px;
+      border-radius: 8px 8px 0 0; padding: 10px 16px 6px;
       text-align: center; opacity: 0;
       transition: opacity 0.5s 0.7s, transform 0.5s 0.7s; z-index: 2;
     }
-    .envelope.open .letter-peek { opacity: 1; transform: translateX(-50%) translateY(-18px); }
-    .letter-peek-txt { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--cyan); }
+    .envelope.open .letter-peek { opacity: 1; transform: translateX(-50%) translateY(-16px); }
+    .letter-peek-txt { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 0.14em; color: var(--cyan); }
     .env-seal {
-      position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
-      width: 56px; height: 56px;
+      position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
+      width: 50px; height: 50px;
       background: radial-gradient(circle, #ffe033 0%, #d97706 70%);
       border-radius: 50%; border: 2px solid rgba(255,215,0,0.5);
       box-shadow: 0 0 22px rgba(255,215,0,0.55), 0 0 55px rgba(255,215,0,0.2);
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 5;
+      display: flex; align-items: center; justify-content: center; font-size: 1.4rem; z-index: 5;
       animation: sealPulse 2.5s ease-in-out infinite;
       transition: transform 0.4s, opacity 0.4s;
     }
@@ -260,109 +257,128 @@
     #main-content {
       position: relative; z-index: 10;
       opacity: 0; pointer-events: none;
-      transform: translateY(50px) scale(0.96);
+      transform: translateY(40px) scale(0.97);
       transition: opacity 0.8s ease, transform 0.8s ease;
-      max-width: 860px; margin: 0 auto;
-      padding: 60px 24px 140px;
+      width: 100%; max-width: 520px;
+      margin: 0 auto;
+      padding: 40px 16px 120px;
     }
     #main-content.show { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
 
-    .hero { text-align: center; margin-bottom: 60px; }
+    /* ══ HERO ══ */
+    .hero { text-align: center; margin-bottom: 48px; }
     .badge {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 7px;
       border: 1px solid var(--border); border-radius: 100px;
-      padding: 6px 18px; font-family: 'Share Tech Mono', monospace; font-size: 0.75rem;
-      color: var(--cyan); letter-spacing: 0.15em; margin-bottom: 32px;
+      padding: 5px 16px; font-family: 'Share Tech Mono', monospace; font-size: 0.68rem;
+      color: var(--cyan); letter-spacing: 0.13em; margin-bottom: 24px;
       background: rgba(0,230,255,0.05);
     }
     .badge::before {
-      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
       background: var(--cyan); box-shadow: 0 0 8px var(--cyan);
-      animation: blink 1.4s infinite;
+      animation: blink 1.4s infinite; flex-shrink: 0;
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
+    .big-emoji { font-size: 3.8rem; line-height: 1; margin-bottom: 14px; }
+
     h1.name {
       font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: clamp(2rem, 6vw, 3.8rem); line-height: 1.05;
-      letter-spacing: -0.02em; color: var(--white); margin-bottom: 12px;
+      font-size: clamp(1.8rem, 7.5vw, 3rem); line-height: 1.08;
+      letter-spacing: -0.02em; color: var(--white); margin-bottom: 10px;
     }
     h1.name span { color: var(--cyan); text-shadow: var(--glow-cyan); }
-    .big-emoji { font-size: 4.5rem; line-height: 1; margin-bottom: 16px; }
-    .tagline { font-family: 'Syne', sans-serif; font-size: clamp(1.1rem, 3vw, 1.5rem); color: var(--gold); text-shadow: var(--glow-gold); margin-bottom: 40px; }
 
-    .status-bar { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 60px; }
-    .chip { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; padding: 5px 14px; border-radius: 100px; border: 1px solid; letter-spacing: 0.1em; }
+    .tagline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1rem, 4vw, 1.3rem);
+      color: var(--gold); text-shadow: var(--glow-gold); margin-bottom: 28px;
+    }
+
+    .status-bar {
+      display: flex; justify-content: center; gap: 6px;
+      flex-wrap: wrap; margin-bottom: 0;
+    }
+    .chip {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+      padding: 4px 12px; border-radius: 100px; border: 1px solid;
+      letter-spacing: 0.08em; white-space: nowrap;
+    }
     .chip.green { border-color:#4ade80;color:#4ade80;background:rgba(74,222,128,0.06); }
     .chip.cyan { border-color:var(--cyan);color:var(--cyan);background:rgba(0,230,255,0.06); }
     .chip.gold { border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.06); }
 
+    /* ══ COUNTDOWN ══ */
     .countdown-wrap {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 18px; padding: 32px; text-align: center;
+      border-radius: 18px; padding: 24px 16px; text-align: center;
       margin-bottom: 16px; backdrop-filter: blur(10px);
     }
-    .countdown-label { font-family:'Share Tech Mono',monospace; font-size:0.72rem; letter-spacing:0.18em; color:var(--cyan); margin-bottom:20px; }
-    .countdown { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
-    .cd-block { display:flex; flex-direction:column; align-items:center; gap:4px; }
-    .cd-num { font-family:'Syne',sans-serif; font-size:clamp(2rem,6vw,3.2rem); font-weight:800; color:var(--cyan); text-shadow:var(--glow-cyan); line-height:1; min-width:70px; text-align:center; }
-    .cd-lbl { font-family:'Share Tech Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; color:var(--muted); }
-    .cd-sep { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:rgba(0,230,255,0.3); align-self:flex-start; padding-top:4px; }
+    .countdown-label {
+      font-family:'Share Tech Mono',monospace; font-size:0.65rem;
+      letter-spacing:0.16em; color:var(--cyan); margin-bottom:16px;
+    }
+    .countdown { display:flex; justify-content:center; gap:10px; }
+    .cd-block { display:flex; flex-direction:column; align-items:center; gap:3px; }
+    .cd-num {
+      font-family:'Syne',sans-serif; font-weight:800;
+      font-size: clamp(1.8rem, 9vw, 3rem);
+      color:var(--cyan); text-shadow:var(--glow-cyan);
+      line-height:1; min-width: clamp(52px, 14vw, 72px); text-align:center;
+    }
+    .cd-lbl { font-family:'Share Tech Mono',monospace; font-size:0.58rem; letter-spacing:0.13em; color:var(--muted); }
+    .cd-sep {
+      font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800;
+      color:rgba(0,230,255,0.3); align-self:flex-start; padding-top:3px;
+    }
 
-    .cards { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
-    @media(max-width:600px){.cards{grid-template-columns:1fr;}}
+    /* ══ CARDS ══ */
+    .cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+    @media(max-width:400px){ .cards { grid-template-columns:1fr; } }
     .card {
       background:var(--surface); border:1px solid var(--border);
-      border-radius:18px; padding:28px; backdrop-filter:blur(12px);
-      transition:border-color 0.3s,transform 0.3s; position:relative; overflow:hidden;
+      border-radius:16px; padding:20px 16px; backdrop-filter:blur(12px);
+      transition:border-color 0.3s; position:relative; overflow:hidden;
     }
-    .card:hover { border-color:rgba(0,230,255,0.4); transform:translateY(-3px); }
+    .card:hover { border-color:rgba(0,230,255,0.35); }
     .card.full { grid-column:1/-1; }
-    .card-label { font-family:'Share Tech Mono',monospace; font-size:0.68rem; letter-spacing:0.18em; color:var(--cyan); text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-    .card-label::before { content:''; width:20px; height:1px; background:var(--cyan); }
-    .card-title { font-family:'Syne',sans-serif; font-size:1.35rem; font-weight:700; color:var(--white); margin-bottom:6px; }
-    .card-sub { font-size:0.9rem; color:var(--muted); line-height:1.5; }
-    .card-icon { font-size:2rem; margin-bottom:12px; }
+    .card-label {
+      font-family:'Share Tech Mono',monospace; font-size:0.62rem;
+      letter-spacing:0.16em; color:var(--cyan); margin-bottom:10px;
+      display:flex; align-items:center; gap:7px;
+    }
+    .card-label::before { content:''; width:16px; height:1px; background:var(--cyan); }
+    .card-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; color:var(--white); margin-bottom:5px; }
+    .card-sub { font-size:0.83rem; color:var(--muted); line-height:1.5; }
+    .card-icon { font-size:1.7rem; margin-bottom:10px; }
 
+    /* ══ TERMINAL ══ */
     .terminal {
       font-family:'Share Tech Mono',monospace;
       background:rgba(0,0,0,0.5); border:1px solid rgba(0,230,255,0.12);
-      border-radius:14px; padding:24px 28px; font-size:0.9rem;
-      color:#4ade80; line-height:1.8; margin-bottom:16px; position:relative;
-      backdrop-filter: blur(10px);
+      border-radius:14px; padding:18px 20px; font-size:0.78rem;
+      color:#4ade80; line-height:1.9; margin-bottom:16px;
+      backdrop-filter: blur(10px); overflow-x: auto;
     }
-    .terminal::before { content:'● ● ●'; display:block; letter-spacing:4px; color:rgba(255,255,255,0.15); font-size:0.6rem; margin-bottom:14px; }
+    .terminal::before { content:'● ● ●'; display:block; letter-spacing:4px; color:rgba(255,255,255,0.15); font-size:0.55rem; margin-bottom:12px; }
     .terminal .prompt { color:var(--cyan); }
     .terminal .comment { color:rgba(74,222,128,0.45); }
 
-    .actions { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:40px; flex-direction: column; align-items: center; }
-    .btn {
-      display:inline-flex; align-items:center; gap:8px;
-      font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem;
-      padding:14px 30px; border-radius:100px; text-decoration:none;
-      border:none; cursor:pointer; transition:all 0.25s; letter-spacing:0.02em;
-    }
-    .btn-primary { background:linear-gradient(135deg,#00e6ff,#0088cc); color:#000; box-shadow:0 0 24px rgba(0,230,255,0.35); }
-    .btn-primary:hover { box-shadow:0 0 40px rgba(0,230,255,0.6); transform:translateY(-2px) scale(1.03); }
-
-    .hacking-text { font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; color: var(--cyan); margin-top: 10px; text-align: center; min-height: 1.2em; }
-
-    /* ══ QUIZ SECTION ══ */
+    /* ══ QUIZ ══ */
     #quiz-section {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 36px 32px; margin-bottom: 20px;
+      border-radius: 18px; padding: 24px 18px; margin-bottom: 16px;
       backdrop-filter: blur(12px); overflow: hidden;
     }
-    .quiz-header {
-      text-align: center; margin-bottom: 32px;
-    }
-    .quiz-header-label { font-family:'Share Tech Mono',monospace; font-size:0.7rem; letter-spacing:0.2em; color:var(--cyan); margin-bottom:10px; }
-    .quiz-header-title { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(1.3rem,4vw,1.9rem); color:var(--white); }
-    .quiz-header-sub { font-size:0.9rem; color:var(--muted); margin-top:6px; }
+    .quiz-header { text-align: center; margin-bottom: 24px; }
+    .quiz-header-label { font-family:'Share Tech Mono',monospace; font-size:0.65rem; letter-spacing:0.18em; color:var(--cyan); margin-bottom:8px; }
+    .quiz-header-title { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(1.15rem,5vw,1.6rem); color:var(--white); }
+    .quiz-header-sub { font-size:0.83rem; color:var(--muted); margin-top:5px; }
 
     .quiz-progress-bar {
       width: 100%; height: 3px;
-      background: rgba(0,230,255,0.1); border-radius: 2px; margin-bottom: 28px;
+      background: rgba(0,230,255,0.1); border-radius: 2px; margin-bottom: 22px;
       overflow: hidden;
     }
     .quiz-progress-fill {
@@ -370,122 +386,141 @@
       border-radius: 2px; transition: width 0.5s ease;
     }
 
-    .quiz-q-wrap { position: relative; min-height: 240px; }
+    .quiz-q-wrap { position: relative; min-height: 220px; }
     .quiz-question {
       position: absolute; inset: 0;
-      opacity: 0; transform: translateX(40px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      opacity: 0; transform: translateX(30px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
       pointer-events: none;
     }
-    .quiz-question.active {
-      opacity: 1; transform: translateX(0); pointer-events: all; position: relative;
-    }
-    .quiz-question.exit-left {
-      opacity: 0; transform: translateX(-40px); pointer-events: none;
-    }
+    .quiz-question.active { opacity: 1; transform: translateX(0); pointer-events: all; position: relative; }
+    .quiz-question.exit-left { opacity: 0; transform: translateX(-30px); pointer-events: none; }
 
-    .q-num { font-family:'Share Tech Mono',monospace; font-size:0.68rem; letter-spacing:0.15em; color:rgba(0,230,255,0.5); margin-bottom:8px; }
-    .q-text { font-family:'Syne',sans-serif; font-size:clamp(1rem,3vw,1.3rem); font-weight:700; color:var(--white); margin-bottom:20px; line-height:1.4; }
+    .q-num { font-family:'Share Tech Mono',monospace; font-size:0.62rem; letter-spacing:0.14em; color:rgba(0,230,255,0.5); margin-bottom:7px; }
+    .q-text { font-family:'Syne',sans-serif; font-size:clamp(0.95rem,4vw,1.15rem); font-weight:700; color:var(--white); margin-bottom:16px; line-height:1.4; }
 
-    .q-options { display:flex; flex-direction:column; gap:10px; }
+    .q-options { display:flex; flex-direction:column; gap:8px; }
     .q-option {
-      display:flex; align-items:center; gap:14px; padding:14px 18px;
+      display:flex; align-items:center; gap:12px; padding:12px 14px;
       background: rgba(0,230,255,0.04); border: 1px solid rgba(0,230,255,0.15);
-      border-radius: 12px; cursor: pointer; transition: all 0.2s;
-      font-family:'DM Sans',sans-serif; font-size:0.95rem; color:var(--white);
+      border-radius: 10px; cursor: pointer; transition: all 0.2s;
+      font-family:'DM Sans',sans-serif; font-size:0.88rem; color:var(--white);
+      -webkit-tap-highlight-color: transparent;
     }
-    .q-option:hover { background: rgba(0,230,255,0.1); border-color: rgba(0,230,255,0.4); transform: translateX(4px); }
+    .q-option:active { background: rgba(0,230,255,0.1); border-color: rgba(0,230,255,0.4); }
     .q-option.selected { background: rgba(0,230,255,0.15); border-color: var(--cyan); }
     .q-option.correct { background: rgba(74,222,128,0.15); border-color: #4ade80; }
     .q-option.wrong { background: rgba(255,80,80,0.1); border-color: rgba(255,80,80,0.5); }
     .opt-letter {
-      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
       background: rgba(0,230,255,0.1); border: 1px solid rgba(0,230,255,0.3);
       display: flex; align-items: center; justify-content: center;
-      font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:var(--cyan);
+      font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:var(--cyan);
       transition: all 0.2s;
     }
-    .q-option:hover .opt-letter { background: var(--cyan); color: #000; }
     .q-option.selected .opt-letter { background: var(--cyan); color: #000; }
 
     .quiz-feedback {
-      margin-top: 14px; padding: 12px 16px; border-radius: 10px;
-      font-family:'Share Tech Mono',monospace; font-size:0.82rem; letter-spacing:0.05em;
-      opacity: 0; transition: opacity 0.3s;
+      margin-top: 12px; padding: 10px 14px; border-radius: 9px;
+      font-family:'Share Tech Mono',monospace; font-size:0.76rem; letter-spacing:0.04em;
+      opacity: 0; transition: opacity 0.3s; line-height: 1.4;
     }
     .quiz-feedback.show { opacity: 1; }
     .quiz-feedback.good { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; }
     .quiz-feedback.bad { background: rgba(255,100,100,0.1); border: 1px solid rgba(255,100,100,0.3); color: #ff8080; }
 
-    .quiz-end {
-      display: none; text-align: center; padding: 20px 0;
-    }
+    .quiz-end { display: none; text-align: center; padding: 16px 0; }
     .quiz-end.show { display: block; }
-    .quiz-end-score { font-family:'Syne',sans-serif; font-size:3rem; font-weight:800; color:var(--cyan); text-shadow:var(--glow-cyan); }
-    .quiz-end-msg { font-family:'DM Sans',sans-serif; font-size:1rem; color:var(--muted); margin-top:10px; }
-    .quiz-end-label { font-family:'Share Tech Mono',monospace; font-size:0.72rem; letter-spacing:0.15em; color:rgba(0,230,255,0.5); margin-bottom:8px; }
+    .quiz-end-score { font-family:'Syne',sans-serif; font-size:2.6rem; font-weight:800; color:var(--cyan); text-shadow:var(--glow-cyan); }
+    .quiz-end-msg { font-family:'DM Sans',sans-serif; font-size:0.9rem; color:var(--muted); margin-top:10px; line-height:1.5; }
+    .quiz-end-label { font-family:'Share Tech Mono',monospace; font-size:0.65rem; letter-spacing:0.14em; color:rgba(0,230,255,0.5); margin-bottom:6px; }
 
-    /* ══ SHAKE HINT ══ */
+    /* ══ HINTS ══ */
     .shake-hint {
       display: inline-block;
-      font-family: 'Share Tech Mono', monospace; font-size: 0.78rem;
-      letter-spacing: 0.15em; color: #00e6ff;
+      font-family: 'Share Tech Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.13em; color: #00e6ff;
       background: rgba(0,10,20,0.92);
       border: 1px solid rgba(0,230,255,0.6);
       border-radius: 100px;
-      padding: 10px 24px;
+      padding: 9px 20px;
       white-space: nowrap;
       cursor: pointer;
       backdrop-filter: blur(16px);
       text-shadow: 0 0 12px rgba(0,230,255,0.9), 0 0 24px rgba(0,230,255,0.5);
       box-shadow: 0 0 20px rgba(0,230,255,0.3), inset 0 0 20px rgba(0,230,255,0.06);
       animation: shakeHintGlow 2s ease-in-out infinite;
-      transition: border-color 0.3s;
+      -webkit-tap-highlight-color: transparent;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     @keyframes shakeHintGlow {
       0%,100%{ box-shadow: 0 0 20px rgba(0,230,255,0.3), inset 0 0 20px rgba(0,230,255,0.06); }
       50%{ box-shadow: 0 0 40px rgba(0,230,255,0.6), inset 0 0 20px rgba(0,230,255,0.12); }
     }
-    .shake-hint:hover { border-color: rgba(0,230,255,0.9); }
-    .shake-hint-wrap { text-align: center; margin-top: 30px; margin-bottom: 10px; }
+    .shake-hint-wrap { text-align: center; margin-top: 24px; margin-bottom: 8px; padding: 0 8px; }
 
+    /* ══ ACTIONS ══ */
+    .actions {
+      display:flex; gap:12px; flex-wrap:wrap;
+      justify-content:center; margin-top:32px;
+      flex-direction: column; align-items: center;
+      padding: 0 8px;
+    }
+    .btn {
+      display:inline-flex; align-items:center; justify-content: center; gap:8px;
+      font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem;
+      padding:13px 28px; border-radius:100px; text-decoration:none;
+      border:none; cursor:pointer; transition:all 0.25s; letter-spacing:0.02em;
+      width: 100%; max-width: 280px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .btn-primary { background:linear-gradient(135deg,#00e6ff,#0088cc); color:#000; box-shadow:0 0 20px rgba(0,230,255,0.3); }
+    .btn-primary:active { box-shadow:0 0 36px rgba(0,230,255,0.55); transform:scale(0.98); }
+
+    .hacking-text {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.75rem;
+      color: var(--cyan); margin-top: 8px; text-align: center; min-height: 1.1em;
+    }
+
+    /* ══ FOOTER ══ */
     footer {
       position: relative; z-index: 15;
       background: linear-gradient(to top, rgba(2,5,15,0.95) 0%, rgba(5,10,26,0.8) 40%, rgba(0,20,40,0.6) 100%);
       border-top: 1px solid rgba(0,230,255,0.18);
-      padding: 50px 24px 40px; margin-top: 100px; text-align: center;
-      font-family: 'Share Tech Mono', monospace; font-size: 0.78rem;
-      color: rgba(240,248,255,0.55); letter-spacing: 0.06em; line-height: 1.9;
+      padding: 40px 20px 32px; margin-top: 60px; text-align: center;
+      font-family: 'Share Tech Mono', monospace; font-size: 0.72rem;
+      color: rgba(240,248,255,0.55); letter-spacing: 0.05em; line-height: 2;
       backdrop-filter: blur(10px);
     }
     footer strong { color: var(--cyan); }
     .heart { color: #ff4d4d; }
+
+    /* ══ SAFE AREA FOR NOTCHED PHONES ══ */
+    @supports (padding: env(safe-area-inset-bottom)) {
+      #main-content { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+      #btn-hacker-mode { bottom: calc(20px + env(safe-area-inset-bottom)); right: calc(20px + env(safe-area-inset-right)); }
+    }
   </style>
 </head>
 <body>
 
-<!-- SHAKE FLASH -->
 <div id="shake-flash"></div>
 
-<!-- HACK ALERT -->
 <div id="hack-alert">
-  <div class="alert-scanlines"></div>
   <div id="hack-alert-inner">
     <div class="alert-icon alert-blink">🚨</div>
     <div class="alert-title">¡ALERTA DE SEGURIDAD!</div>
     <div class="alert-sub">⚠️ INTRUSO DETECTADO ⚠️</div>
-    <div class="alert-sub" style="margin-top:10px;font-size:1.1rem;color:#fff;">
-      📞 ¡¡HABLEN A TONY AHORITA!!
-    </div>
-    <div class="alert-sub" style="margin-top:6px;opacity:0.7">Para desactivar la alarma llamen al graduado inmediatamente</div>
+    <div class="alert-sub" style="margin-top:10px;font-size:1.05rem;color:#fff;">📞 ¡¡HABLEN A TONY AHORITA!!</div>
+    <div class="alert-sub" style="margin-top:6px;opacity:0.7;font-size:0.78rem;">Para desactivar la alarma llamen al graduado</div>
     <div class="alert-countdown" id="alert-cd">Volviendo a la normalidad en 5...</div>
   </div>
 </div>
 
-
-
-<!-- HACKER MODE BTN -->
-<button id="btn-hacker-mode" title="Mantén presionado para activar...">
+<button id="btn-hacker-mode" title="Mantén presionado...">
   <span>☠️</span>
   <div class="hacker-progress" id="hacker-progress"></div>
 </button>
@@ -513,7 +548,7 @@
       <div class="env-flap-wrap"><div class="env-flap" id="env-flap"><div class="env-flap-face"></div></div></div>
     </div>
     <div class="env-seal">🔒</div>
-    <div class="click-indicator">CLICK PARA ABRIR</div>
+    <div class="click-indicator">TOCA PARA ABRIR</div>
   </div>
 </div>
 
@@ -525,22 +560,22 @@
     <h1 class="name">Angel Antonio<br><span>De Jesús Kantún Chi</span></h1>
     <p class="tagline">Te invito a mi graduación 🚀</p>
     <div class="status-bar">
-      <span class="chip green">✓ STATUS: GRADUATED</span>
+      <span class="chip green">✓ GRADUATED</span>
       <span class="chip cyan">⬡ BUILD: PASSED</span>
-      <span class="chip gold">★ VERSION: 1.0.0-final</span>
+      <span class="chip gold">★ v1.0.0-final</span>
     </div>
   </div>
 
   <div class="countdown-wrap">
-    <div class="countdown-label">⏳ TIEMPO RESTANTE PARA LA GRADUACION</div>
+    <div class="countdown-label">⏳ TIEMPO RESTANTE PARA LA GRADUACIÓN</div>
     <div class="countdown">
       <div class="cd-block"><div class="cd-num" id="cd-days">--</div><div class="cd-lbl">DÍAS</div></div>
       <div class="cd-sep">:</div>
-      <div class="cd-block"><div class="cd-num" id="cd-hours">--</div><div class="cd-lbl">HORAS</div></div>
+      <div class="cd-block"><div class="cd-num" id="cd-hours">--</div><div class="cd-lbl">HRS</div></div>
       <div class="cd-sep">:</div>
-      <div class="cd-block"><div class="cd-num" id="cd-mins">--</div><div class="cd-lbl">MINUTOS</div></div>
+      <div class="cd-block"><div class="cd-num" id="cd-mins">--</div><div class="cd-lbl">MIN</div></div>
       <div class="cd-sep">:</div>
-      <div class="cd-block"><div class="cd-num" id="cd-secs">--</div><div class="cd-lbl">SEGUNDOS</div></div>
+      <div class="cd-block"><div class="cd-num" id="cd-secs">--</div><div class="cd-lbl">SEG</div></div>
     </div>
   </div>
 
@@ -549,13 +584,13 @@
       <div class="card-icon">🏛️</div>
       <div class="card-label">Ceremonia</div>
       <div class="card-title">Viernes 29 Mayo 2026</div>
-      <div class="card-sub">07:00 pm<br>Instituto Tecnológico Superior de Calkiní</div>
+      <div class="card-sub">07:00 pm<br>ITESC, Calkiní</div>
     </div>
     <div class="card">
       <div class="card-icon">🎉</div>
       <div class="card-label">Fiesta</div>
-      <div class="card-title">7:00 pm</div>
-      <div class="card-sub">[Lugar de la fiesta]<br>Dress code: Casual tech 😎</div>
+      <div class="card-title">7:00 pm en adelante</div>
+      <div class="card-sub">[Lugar a confirmar]<br>Dress code: Casual tech 😎</div>
     </div>
     <div class="card full">
       <div class="card-label">Dress Code</div>
@@ -570,8 +605,8 @@
     <span class="comment">a4f1c3e  feat: 4 años de trabajo duro ✓</span><br>
     <span class="comment">b92e10d  fix: infinitos bugs corregidos ✓</span><br>
     <span class="comment">7d0a55f  perf: miles de cafés consumidos ✓</span><br>
-    <span class="prompt">angel@graduation:~$</span> git tag -a v1.0.0 -m "¡Graduado!" && git push origin main<br>
-    <span style="color:#ffd700">🎉 Tag v1.0.0 pushed — ¡Nos vemos en producción!</span>
+    <span class="prompt">angel@graduation:~$</span> git tag v1.0.0 && git push<br>
+    <span style="color:#ffd700">🎉 ¡Nos vemos en producción!</span>
   </div>
 
   <!-- QUIZ -->
@@ -587,58 +622,59 @@
       <div class="quiz-end-label">RESULTADO FINAL</div>
       <div class="quiz-end-score" id="quiz-score">0/0</div>
       <div class="quiz-end-msg" id="quiz-end-msg"></div>
-      <button onclick="resetQuiz()" class="btn btn-primary" style="margin-top:24px;font-size:0.85rem;padding:10px 24px;">🔄 Volver a Intentar</button>
+      <button onclick="resetQuiz()" class="btn btn-primary" style="margin-top:20px;font-size:0.82rem;padding:10px 22px;">🔄 Volver a Intentar</button>
     </div>
   </div>
 
-  <div class="shake-hint-wrap"><div class="shake-hint" id="shake-hint">📱 TIP: ¡PRESIONE DOS VECES!</div></div>
-    <div class="shake-hint-wrap"><div class="shake-hint" id="shake-hint">📱 TIP: ¡NO PRESIONAR EL BOTON ROJO POR MUCHO TIEMPO!☠️</div></div>
+  <div class="shake-hint-wrap">
+    <div class="shake-hint" id="shake-hint1">📱 TIP: ¡TOCA DOS VECES RÁPIDO!</div>
+  </div>
+  <div class="shake-hint-wrap">
+    <div class="shake-hint" id="shake-hint2">☠️ TIP: ¡NO PRESIONES EL BOTÓN ROJO MUCHO TIEMPO!</div>
+  </div>
+
   <div class="actions">
-    <a href="https://maps.app.goo.gl/5erEk5kY5HWxGUkh7" target="_blank" class="btn btn-primary">📍 Ver Mapa</a>
+    <a href="https://maps.app.goo.gl/5erEk5kY5HWxGUkh7" target="_blank" rel="noopener" class="btn btn-primary">📍 Ver Mapa</a>
     <button onclick="iniciarHackeo(this)" class="btn btn-primary" id="btn-confirmar">📝 Confirmar Acceso</button>
     <div class="hacking-text" id="hacking-status"></div>
   </div>
 
   <footer>
-    <strong>ANGEL ANTONIO DE JESUS KANTÚN CHI</strong> · 2026 ·<br>
+    <strong>ANGEL ANTONIO DE JESUS KANTÚN CHI</strong> · 2026<br>
     compiled with love · zero warnings · all tests passing<br>
     <br>// Con cariño, <strong>Tony</strong> 💾 <span class="heart">❤️</span>
   </footer>
 </div>
 
 <script>
-/* ══════════════════════════════════
-   MATRIX RAIN VERDE (FONDO)
-══════════════════════════════════ */
+/* ══ MATRIX BG ══ */
 (function(){
-  const cv = document.getElementById('matrix-canvas');
-  const ctx = cv.getContext('2d');
-  let cols, drops;
-  const chars = '01アイウエオカキクケコ<>{}[]//==&&||';
+  const cv=document.getElementById('matrix-canvas');
+  const ctx=cv.getContext('2d');
+  let cols,drops;
+  const chars='01アイウエオカキクケコ<>{}[]//==&&||';
   function init(){
-    cv.width = innerWidth; cv.height = innerHeight;
-    cols = Math.floor(cv.width / 20);
-    drops = Array(cols).fill(1);
+    cv.width=innerWidth;cv.height=innerHeight;
+    cols=Math.floor(cv.width/20);
+    drops=Array(cols).fill(1);
   }
   function draw(){
-    ctx.fillStyle = 'rgba(5,8,16,0.05)';
+    ctx.fillStyle='rgba(5,8,16,0.05)';
     ctx.fillRect(0,0,cv.width,cv.height);
-    ctx.fillStyle = '#00ff41';
-    ctx.font = '13px Share Tech Mono, monospace';
+    ctx.fillStyle='#00ff41';
+    ctx.font='12px Share Tech Mono,monospace';
     drops.forEach((y,i)=>{
       ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*20,y*20);
-      if(y*20>cv.height&&Math.random()>0.975) drops[i]=0;
+      if(y*20>cv.height&&Math.random()>0.975)drops[i]=0;
       drops[i]++;
     });
   }
   init();
-  addEventListener('resize',init);
-  setInterval(draw,60);
+  addEventListener('resize',()=>{init();});
+  setInterval(draw,65);
 })();
 
-/* ══════════════════════════════════
-   MATRIX OVERLAY
-══════════════════════════════════ */
+/* ══ MATRIX OVERLAY ══ */
 function startMatrixOverlay(){
   const cv=document.getElementById('matrix-overlay-canvas');
   const ctx=cv.getContext('2d');
@@ -654,7 +690,7 @@ function startMatrixOverlay(){
   function draw(){
     ctx.fillStyle='rgba(5,8,16,0.035)';
     ctx.fillRect(0,0,cv.width,cv.height);
-    ctx.font='13px Share Tech Mono,monospace';
+    ctx.font='12px Share Tech Mono,monospace';
     for(let i=0;i<cols;i++){
       const x=i*16,y=drops[i]*16;
       const alpha=0.1+(i%5)*0.05;
@@ -662,8 +698,6 @@ function startMatrixOverlay(){
       ctx.fillText(randomChar(),x,y);
       ctx.fillStyle=`rgba(0,255,65,${alpha+0.3})`;
       ctx.fillText(randomChar(),x,y-16);
-      ctx.fillStyle=`rgba(0,59,0,${alpha*0.5})`;
-      ctx.fillText(randomChar(),x,y-48);
       if(y>cv.height&&Math.random()>0.96)drops[i]=0;
       drops[i]+=speeds[i];
     }
@@ -673,17 +707,15 @@ function startMatrixOverlay(){
   setInterval(draw,42);
 }
 
-/* ══════════════════════════════════
-   ENVELOPE OPEN
-══════════════════════════════════ */
+/* ══ ENVELOPE ══ */
 const envelope=document.getElementById('envelope');
 const scene=document.getElementById('envelope-scene');
 const content=document.getElementById('main-content');
 const confettiCv=document.getElementById('confetti-canvas');
 
-envelope.addEventListener('click',()=>{
+function openEnvelope(){
   envelope.classList.add('open');
-  setTimeout(()=>{ scene.classList.add('hide'); },900);
+  setTimeout(()=>scene.classList.add('hide'),900);
   setTimeout(()=>{
     content.classList.add('show');
     startMatrixOverlay();
@@ -696,20 +728,22 @@ envelope.addEventListener('click',()=>{
     initQuiz();
     document.getElementById('btn-hacker-mode').classList.add('visible');
   },1500);
-});
+}
 
-/* ══════════════════════════════════
-   CONFETTI
-══════════════════════════════════ */
+envelope.addEventListener('click', openEnvelope);
+envelope.addEventListener('touchend', (e)=>{ e.preventDefault(); openEnvelope(); }, {passive:false});
+
+/* ══ CONFETTI ══ */
 function startConfetti(){
   const cv=confettiCv,ctx=cv.getContext('2d');
   cv.width=innerWidth;cv.height=innerHeight;
   const colors=['#00e6ff','#ffd700','#00ff41','#ff6b6b','#a855f7'];
-  const pieces=Array(120).fill().map(()=>({
-    x:Math.random()*cv.width,y:-20,r:Math.random()*6+2,
+  const pieces=Array(90).fill().map(()=>({
+    x:Math.random()*cv.width,y:-20,
+    r:Math.random()*5+2,
     color:colors[Math.floor(Math.random()*colors.length)],
-    vy:Math.random()*3+1,vx:(Math.random()-.5)*2,
-    life:1,rot:Math.random()*360,rotV:(Math.random()-.5)*6
+    vy:Math.random()*2.5+1,vx:(Math.random()-.5)*1.8,
+    rot:Math.random()*360,rotV:(Math.random()-.5)*5
   }));
   function update(){
     ctx.clearRect(0,0,cv.width,cv.height);
@@ -718,79 +752,73 @@ function startConfetti(){
       ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
       ctx.fillStyle=p.color;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r);
       ctx.restore();
+      if(p.y>cv.height){p.y=-10;p.x=Math.random()*cv.width;}
     });
     requestAnimationFrame(update);
   }
   update();
 }
 
-/* ══════════════════════════════════
-   COUNTDOWN
-══════════════════════════════════ */
+/* ══ COUNTDOWN ══ */
 function startCountdown(){
   const target=new Date('2026-05-29T19:00:00');
-  setInterval(()=>{
+  function update(){
     const diff=target-new Date();
     if(diff<=0)return;
     document.getElementById('cd-days').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
     document.getElementById('cd-hours').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
     document.getElementById('cd-mins').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
     document.getElementById('cd-secs').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
-  },1000);
+  }
+  update();
+  setInterval(update,1000);
 }
 
-/* ══════════════════════════════════
-   CONFIRMAR ACCESO
-══════════════════════════════════ */
+/* ══ CONFIRMAR ACCESO ══ */
 function iniciarHackeo(btn){
   if(btn.disabled)return;
   btn.disabled=true;
-  const originalText=btn.innerText;
   const hexChars="0123456789ABCDEF";
-  const pasos=["CONECTANDO AL SERVIDOR...","EXTRAYENDO CREDENCIALES...","BYPASSING FIREWALL...","AUTENTICACIÓN EXITOSA"];
+  const pasos=["CONECTANDO AL SERVIDOR...","EXTRAYENDO CREDENCIALES...","BYPASSING FIREWALL...","AUTENTICACIÓN EXITOSA ✓"];
   let i=0;
   const interval=setInterval(()=>{
     let r="";
-    for(let j=0;j<originalText.length;j++) r+=hexChars[Math.floor(Math.random()*hexChars.length)];
+    for(let j=0;j<18;j++) r+=hexChars[Math.floor(Math.random()*hexChars.length)];
     btn.innerText=r;
     btn.style.opacity=Math.random()>0.5?"0.8":"1";
   },80);
   const msgInterval=setInterval(()=>{
-    if(i<pasos.length){btn.innerText=pasos[i];i++;}
+    if(i<pasos.length){btn.innerText=pasos[i];btn.style.opacity="1";i++;}
     else{
       clearInterval(interval);clearInterval(msgInterval);
       btn.style.background="#4ade80";btn.style.color="#000";btn.style.opacity="1";
       btn.innerText="✓ ACCESO CONCEDIDO";
       startConfetti();
       setTimeout(()=>{
-        btn.disabled=false;btn.innerText="📝 Enterado";
+        btn.disabled=false;
+        btn.innerText="📝 Enterado";
         btn.style.background="";btn.style.color="";
-      },1500);
+      },2000);
     }
-  },1000);
+  },900);
 }
 
-/* ══════════════════════════════════
-   SHAKE TO DEPLOY
-══════════════════════════════════ */
+/* ══ SHAKE / DOUBLE TAP ══ */
 let lastAcc={x:0,y:0,z:0};
 let shakeEnabled=false;
 let shakeCooldown=false;
 
-// Request permission for iOS
 if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function'){
-  document.querySelector('.shake-hint').addEventListener('click',()=>{
-    DeviceMotionEvent.requestPermission().then(r=>{ if(r==='granted') shakeEnabled=true; });
+  document.getElementById('shake-hint1').addEventListener('click',()=>{
+    DeviceMotionEvent.requestPermission().then(r=>{if(r==='granted')shakeEnabled=true;});
   });
 } else { shakeEnabled=true; }
 
 window.addEventListener('devicemotion',(e)=>{
-  if(!shakeEnabled||shakeCooldown) return;
+  if(!shakeEnabled||shakeCooldown)return;
   const a=e.accelerationIncludingGravity;
-  if(!a) return;
-  const dx=Math.abs(a.x-lastAcc.x);
-  const dy=Math.abs(a.y-lastAcc.y);
-  const dz=Math.abs(a.z-lastAcc.z);
+  if(!a)return;
+  const dx=Math.abs(a.x-lastAcc.x),dy=Math.abs(a.y-lastAcc.y),dz=Math.abs(a.z-lastAcc.z);
   if(dx+dy+dz>35){
     triggerShakeDeploy();
     shakeCooldown=true;
@@ -800,50 +828,48 @@ window.addEventListener('devicemotion',(e)=>{
 });
 
 function triggerShakeDeploy(){
-  // Flash blanco 5 veces
   const flash=document.getElementById('shake-flash');
   let count=0;
   const iv=setInterval(()=>{
     flash.classList.toggle('active');
     count++;
-    if(count>=10){ clearInterval(iv); flash.classList.remove('active'); }
-  },250);
+    if(count>=10){clearInterval(iv);flash.classList.remove('active');}
+  },230);
 }
 
-// Desktop: doble click rápido en badge para simular shake
-document.querySelector('.shake-hint').addEventListener('dblclick',()=>{
-  if(!document.getElementById('main-content').classList.contains('show')) return;
-  triggerShakeDeploy();
+// Double tap on hint
+let lastTap=0;
+document.getElementById('shake-hint1').addEventListener('touchend',(e)=>{
+  const now=Date.now();
+  if(now-lastTap<350&&document.getElementById('main-content').classList.contains('show')){
+    e.preventDefault();
+    triggerShakeDeploy();
+  }
+  lastTap=now;
+});
+document.getElementById('shake-hint1').addEventListener('dblclick',()=>{
+  if(document.getElementById('main-content').classList.contains('show'))triggerShakeDeploy();
 });
 
-/* ══════════════════════════════════
-   HACKER MODE (LONG PRESS)
-══════════════════════════════════ */
+/* ══ HACKER MODE ══ */
 const hackerBtn=document.getElementById('btn-hacker-mode');
 const hackerProg=document.getElementById('hacker-progress');
 const hackAlert=document.getElementById('hack-alert');
 const alertCd=document.getElementById('alert-cd');
-let pressTimer=null;
-let pressStart=null;
-let pressDuration=2000; // 2s hold
-let pressInterval=null;
+let pressInterval=null,pressStart=null;
+const pressDuration=2000;
 
 function startPress(){
   pressStart=Date.now();
   pressInterval=setInterval(()=>{
-    const elapsed=Date.now()-pressStart;
-    const pct=Math.min(elapsed/pressDuration,1);
+    const pct=Math.min((Date.now()-pressStart)/pressDuration,1);
     const deg=pct*360;
     hackerProg.style.background=`conic-gradient(#ff3030 ${deg}deg, transparent ${deg}deg)`;
-    if(pct>=1){
-      clearInterval(pressInterval);
-      triggerHackerMode();
-    }
+    if(pct>=1){clearInterval(pressInterval);triggerHackerMode();}
   },30);
 }
-
 function endPress(){
-  if(pressInterval) clearInterval(pressInterval);
+  if(pressInterval)clearInterval(pressInterval);
   hackerProg.style.background='conic-gradient(#ff3030 0deg, transparent 0deg)';
 }
 
@@ -852,6 +878,7 @@ hackerBtn.addEventListener('touchstart',(e)=>{e.preventDefault();startPress();},
 hackerBtn.addEventListener('mouseup',endPress);
 hackerBtn.addEventListener('mouseleave',endPress);
 hackerBtn.addEventListener('touchend',endPress);
+hackerBtn.addEventListener('touchcancel',endPress);
 
 function triggerHackerMode(){
   hackAlert.classList.add('active');
@@ -861,79 +888,23 @@ function triggerHackerMode(){
   const cd=setInterval(()=>{
     secs--;
     alertCd.textContent=`Volviendo a la normalidad en ${secs}...`;
-    if(secs<=0){
-      clearInterval(cd);
-      hackAlert.classList.remove('active');
-      document.body.style.overflow='';
-    }
+    if(secs<=0){clearInterval(cd);hackAlert.classList.remove('active');document.body.style.overflow='';}
   },1000);
 }
 
-/* ══════════════════════════════════
-   QUIZ — ¿Cuánto conoces a Antonio?
-══════════════════════════════════ */
+/* ══ QUIZ ══ */
 const PREGUNTAS=[
-  {
-    q:"¿Cuál es el color favorito de Antonio?",
-    opts:["Azul","Negro","Verde","Rojo"],
-    correct:1,
-    goodMsg:"✓ ¡Correcto! Le encanta el negro. Muy de dev 😎",
-    badMsg:"✗ Era Negro. Clásico de programador hacker vibes."
-  },
-  {
-    q:"¿A qué hora suele dormirse Tony cuando tiene proyecto?",
-    opts:["10 pm","12 am","2 am o más tarde","no duerme"],
-    correct:3,
-    goodMsg:"✓ ¡Jajaja exacto! El deploy en producción no espera.",
-    badMsg:"✗ La respuesta era '7 am (no durmió)'. El café es su mejor amigo."
-  },
-  {
-    q:"¿Cuál es la bebida favorita de Tony para programar?",
-    opts:["Té verde","Agua mineral","Café","Redbull"],
-    correct:2,
-    goodMsg:"✓ ¡Sin café no hay código! ☕",
-    badMsg:"✗ Es el café negro. Fuel oficial de los devs."
-  },
-  {
-    q:"¿Qué carrera estudió Antonio?",
-    opts:["Sistemas Computacionales","Ingeniería Informática","Ing. en TI","Ing. en Software"],
-    correct:1,
-    goodMsg:"✓ ¡Correcto! Ingeniería Informática 2026 🎓",
-    badMsg:"✗ Era Ingeniería Informática. ¡Ya memorizalo!"
-  },
-  {
-    q:"Si Tony fuera un lenguaje de programación, ¿cuál sería?",
-    opts:["Python (fácil y amigable)","JavaScript (impredecible)","Rust (intenso y perfeccionista)","COBOL (un clásico misterioso)"],
-    correct:2,
-    goodMsg:"✓ ¡Sí! Rust: intenso, dedicado y no deja pasar errores 🦀",
-    badMsg:"✗ Era Rust. Perfeccionista, intenso, poderoso."
-  },
-  {
-    q:"¿Cuántos commits (aprox.) tiene Tony en sus proyectos universitarios?",
-    opts:["menos de 50","50 - 200","200 - 500","Perdió la cuenta"],
-    correct:3,
-    goodMsg:"✓ ¡Literalmente perdió la cuenta! git log es infinito.",
-    badMsg:"✗ ¡Perdió la cuenta! Demasiados commits de madrugada."
-  },
-  {
-    q:"¿Qué emoji define mejor a Antonio?",
-    opts:["🤓 Nerd clásico","💀 Developer en viernes","🚀 Siempre pa'delante","🐛 Debug en curso"],
-    correct:2,
-    goodMsg:"✓ 🚀 ¡Exacto! Tony siempre mirando al frente.",
-    badMsg:"✗ Era 🚀. Tony siempre pa'delante sin importar nada."
-  },
-  {
-    q:"¿Qué frase diría Tony al terminar un proyecto?",
-    opts:['"¿Ya funciona? No toques nada."','"¡Deploy en producción!"','"git push --force 😈"','"Works on my machine 🤷"'],
-    correct:0,
-    goodMsg:"✓ ¡La frase sagrada del desarrollador! No toques nada.",
-    badMsg:"✗ Era '¿Ya funciona? No toques nada.' — La ley suprema del dev."
-  }
+  {q:"¿Cuál es el color favorito de Antonio?",opts:["Azul","Negro","Verde","Rojo"],correct:1,goodMsg:"✓ ¡Correcto! Le encanta el negro. Muy de dev 😎",badMsg:"✗ Era Negro. Clásico de programador hacker vibes."},
+  {q:"¿A qué hora suele dormirse Tony cuando tiene proyecto?",opts:["10 pm","12 am","2 am o más tarde","No duerme"],correct:3,goodMsg:"✓ ¡Jajaja exacto! El deploy en producción no espera.",badMsg:"✗ La respuesta era 'No duerme'. El café es su mejor amigo."},
+  {q:"¿Cuál es la bebida favorita de Tony para programar?",opts:["Té verde","Agua mineral","Café","Redbull"],correct:2,goodMsg:"✓ ¡Sin café no hay código! ☕",badMsg:"✗ Es el café negro. Fuel oficial de los devs."},
+  {q:"¿Qué carrera estudió Antonio?",opts:["Sistemas Computacionales","Ingeniería Informática","Ing. en TI","Ing. en Software"],correct:1,goodMsg:"✓ ¡Correcto! Ingeniería Informática 2026 🎓",badMsg:"✗ Era Ingeniería Informática. ¡Ya memorizalo!"},
+  {q:"Si Tony fuera un lenguaje de programación, ¿cuál sería?",opts:["Python (amigable)","JavaScript (impredecible)","Rust (perfeccionista)","COBOL (misterioso)"],correct:2,goodMsg:"✓ ¡Sí! Rust: intenso, dedicado y no deja pasar errores 🦀",badMsg:"✗ Era Rust. Perfeccionista, intenso, poderoso."},
+  {q:"¿Cuántos commits (aprox.) tiene Tony en proyectos universitarios?",opts:["Menos de 50","50 - 200","200 - 500","Perdió la cuenta"],correct:3,goodMsg:"✓ ¡Literalmente perdió la cuenta! git log es infinito.",badMsg:"✗ ¡Perdió la cuenta! Demasiados commits de madrugada."},
+  {q:"¿Qué emoji define mejor a Antonio?",opts:["🤓 Nerd clásico","💀 Developer en viernes","🚀 Siempre pa'delante","🐛 Debug en curso"],correct:2,goodMsg:"✓ 🚀 ¡Exacto! Tony siempre mirando al frente.",badMsg:"✗ Era 🚀. Tony siempre pa'delante sin importar nada."},
+  {q:"¿Qué frase diría Tony al terminar un proyecto?",opts:['"¿Ya funciona? No toques nada."','"¡Deploy en producción!"','"git push --force 😈"','"Works on my machine 🤷"'],correct:0,goodMsg:"✓ ¡La frase sagrada del desarrollador! No toques nada.",badMsg:"✗ Era '¿Ya funciona? No toques nada.' — La ley suprema del dev."}
 ];
 
-let currentQ=0;
-let score=0;
-let answered=false;
+let currentQ=0,score=0,answered=false;
 
 function initQuiz(){
   currentQ=0;score=0;answered=false;
@@ -945,11 +916,9 @@ function initQuiz(){
 function renderQuestion(idx){
   const wrap=document.getElementById('quiz-q-wrap');
   wrap.innerHTML='';
-
   const p=PREGUNTAS[idx];
   const div=document.createElement('div');
   div.className='quiz-question active';
-
   const letters=['A','B','C','D'];
   div.innerHTML=`
     <div class="q-num">PREGUNTA ${idx+1} / ${PREGUNTAS.length}</div>
@@ -959,8 +928,7 @@ function renderQuestion(idx){
         <div class="q-option" onclick="selectOption(${i},${p.correct})" id="opt-${i}">
           <div class="opt-letter">${letters[i]}</div>
           <span>${o}</span>
-        </div>
-      `).join('')}
+        </div>`).join('')}
     </div>
     <div class="quiz-feedback" id="q-feedback"></div>
   `;
@@ -968,67 +936,45 @@ function renderQuestion(idx){
   answered=false;
 }
 
-function selectOption(selected, correct){
-  if(answered) return;
+function selectOption(selected,correct){
+  if(answered)return;
   answered=true;
-
   const opts=document.querySelectorAll('.q-option');
   const feedback=document.getElementById('q-feedback');
   const p=PREGUNTAS[currentQ];
-
   opts[selected].classList.add(selected===correct?'correct':'wrong');
-  if(selected!==correct) opts[correct].classList.add('correct');
-
+  if(selected!==correct)opts[correct].classList.add('correct');
   opts.forEach(o=>o.style.pointerEvents='none');
-
-  if(selected===correct){
-    score++;
-    feedback.textContent=p.goodMsg;
-    feedback.className='quiz-feedback show good';
-  } else {
-    feedback.textContent=p.badMsg;
-    feedback.className='quiz-feedback show bad';
-  }
-
+  if(selected===correct){score++;feedback.textContent=p.goodMsg;feedback.className='quiz-feedback show good';}
+  else{feedback.textContent=p.badMsg;feedback.className='quiz-feedback show bad';}
   setTimeout(()=>{
-    const wrap=document.getElementById('quiz-q-wrap');
-    const current=wrap.querySelector('.quiz-question');
-    if(current) current.classList.add('exit-left');
-
+    const current=document.getElementById('quiz-q-wrap').querySelector('.quiz-question');
+    if(current)current.classList.add('exit-left');
     setTimeout(()=>{
       currentQ++;
-      if(currentQ<PREGUNTAS.length){
-        renderQuestion(currentQ);
-        updateProgress();
-      } else {
-        showQuizEnd();
-      }
+      if(currentQ<PREGUNTAS.length){renderQuestion(currentQ);updateProgress();}
+      else showQuizEnd();
     },400);
   },1800);
 }
 
 function updateProgress(){
-  const pct=(currentQ/PREGUNTAS.length)*100;
-  document.getElementById('quiz-fill').style.width=pct+'%';
+  document.getElementById('quiz-fill').style.width=(currentQ/PREGUNTAS.length*100)+'%';
 }
 
 function showQuizEnd(){
   document.getElementById('quiz-q-wrap').innerHTML='';
   document.getElementById('quiz-fill').style.width='100%';
-
   const endEl=document.getElementById('quiz-end');
   document.getElementById('quiz-score').textContent=`${score}/${PREGUNTAS.length}`;
-
   let msg='';
-  if(score>=7) msg='🏆 ¡ERES EL/LA MEJOR AMIGO/A DE TONY! Nivel: God Mode';
-  else if(score>=5) msg='🎯 ¡Buen nivel! Definitivamente lo conoces bien 😄';
-  else if(score>=3) msg='🤔 Lo conoces un poco... toca pasar más tiempo juntos';
-  else msg='💀 Oof. ¿Seguro que conoces a Tony? 😂 No te preocupes, hoy lo celebramos juntos';
-
+  if(score>=7)msg='🏆 ¡ERES EL/LA MEJOR AMIGO/A DE TONY! Nivel: God Mode';
+  else if(score>=5)msg='🎯 ¡Buen nivel! Definitivamente lo conoces bien 😄';
+  else if(score>=3)msg='🤔 Lo conoces un poco... toca pasar más tiempo juntos';
+  else msg='💀 Oof. ¿Seguro que conoces a Tony? 😂 ¡Hoy lo celebramos juntos!';
   document.getElementById('quiz-end-msg').textContent=msg;
   endEl.classList.add('show');
-
-  if(score>=5) startConfetti();
+  if(score>=5)startConfetti();
 }
 
 function resetQuiz(){
