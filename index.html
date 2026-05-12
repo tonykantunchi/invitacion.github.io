@@ -315,6 +315,60 @@
       color: rgba(240,248,255,0.35); letter-spacing: 0.1em;
       text-align: right;
     }
+    /* ─── BARRA DE BIENVENIDA ─── */
+    /* ─── OVERLAY BIENVENIDA ─── */
+    #welcome-bar {
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(5, 8, 16, 0.96);
+      backdrop-filter: blur(18px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 28px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    #welcome-bar.show { opacity: 1; pointer-events: all; }
+    #welcome-bar.fade-out { opacity: 0; pointer-events: none; }
+    #welcome-bar-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.3em;
+      color: rgba(0, 230, 255, 0.5);
+      text-transform: uppercase;
+    }
+    #welcome-bar-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      color: var(--white); letter-spacing: -0.01em; text-align: center;
+      line-height: 1.1;
+    }
+    #welcome-bar-title span { color: var(--cyan); text-shadow: var(--glow-cyan); }
+    #welcome-bar-wrap {
+      width: min(420px, 82vw);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    #welcome-bar-status {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.12em;
+      color: rgba(0, 230, 255, 0.6);
+      min-height: 1.2em;
+    }
+    #welcome-bar-track {
+      width: 100%; height: 5px;
+      background: rgba(0, 230, 255, 0.08);
+      border-radius: 5px; overflow: hidden;
+    }
+    #welcome-bar-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--cyan), var(--gold));
+      border-radius: 5px;
+      transition: width 0.25s ease;
+      box-shadow: 0 0 12px rgba(0, 230, 255, 0.5);
+    }
+    #welcome-bar-pct {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem; color: rgba(0, 230, 255, 0.45);
+      letter-spacing: 0.1em; text-align: right;
+    }
+
     /* skip button */
     #boot-skip {
       position: absolute; bottom: 20px; right: 20px; z-index: 2;
@@ -379,6 +433,17 @@
 <div id="matrix-overlay"><canvas id="matrix-overlay-canvas"></canvas></div>
 <div class="vignette" id="vignette"></div>
 <canvas id="confetti-canvas"></canvas>
+
+<!-- ═══════════ OVERLAY BIENVENIDA ═══════════ -->
+<div id="welcome-bar">
+  <div id="welcome-bar-label">// SISTEMA DE INVITACIÓN</div>
+  <div id="welcome-bar-title">Bienvenido,<br><span>Invitado</span></div>
+  <div id="welcome-bar-wrap">
+    <div id="welcome-bar-status">Iniciando...</div>
+    <div id="welcome-bar-track"><div id="welcome-bar-fill"></div></div>
+    <div id="welcome-bar-pct">0%</div>
+  </div>
+</div>
 
 <div id="envelope-scene">
   <div class="env-hint">✉  TIENES UN MENSAJE NUEVO  ✉</div>
@@ -695,6 +760,48 @@ function startMatrixOverlay(){
   init();addEventListener('resize',init);setInterval(draw,42);
 }
 
+/* ════ OVERLAY DE BIENVENIDA ════ */
+function showWelcomeBar(){
+  const bar    = document.getElementById('welcome-bar');
+  const fill   = document.getElementById('welcome-bar-fill');
+  const pct    = document.getElementById('welcome-bar-pct');
+  const status = document.getElementById('welcome-bar-status');
+
+  const steps = [
+    { msg: 'Abriendo invitación...', target: 20 },
+    { msg: 'Cargando detalles del evento...', target: 45 },
+    { msg: 'Preparando tu lugar...', target: 70 },
+    { msg: 'Confirmando acceso...', target: 90 },
+    { msg: '✓ Acceso concedido — ¡Bienvenido!', target: 100 },
+  ];
+
+  bar.classList.add('show');
+  let progress = 0;
+  let stepIdx  = 0;
+
+  function runStep(){
+    if(stepIdx >= steps.length){ finish(); return; }
+    const step = steps[stepIdx++];
+    status.textContent = step.msg;
+    const target = step.target;
+    const ticker = setInterval(()=>{
+      progress += Math.random() * 3 + 1;
+      if(progress >= target){ progress = target; clearInterval(ticker); setTimeout(runStep, 320); }
+      fill.style.width = Math.min(progress, 100) + '%';
+      pct.textContent  = Math.round(Math.min(progress, 100)) + '%';
+    }, 55);
+  }
+
+  function finish(){
+    setTimeout(()=>{
+      bar.classList.add('fade-out');
+      setTimeout(()=>{ bar.classList.remove('show','fade-out'); }, 600);
+    }, 800);
+  }
+
+  setTimeout(runStep, 200);
+}
+
 /* ════ SOBRE ════ */
 const envelope=document.getElementById('envelope');
 const scene=document.getElementById('envelope-scene');
@@ -703,6 +810,7 @@ const confettiCv=document.getElementById('confetti-canvas');
 
 envelope.addEventListener('click',()=>{
   envelope.classList.add('open');
+  showWelcomeBar();
   setTimeout(()=>scene.classList.add('hide'),900);
   setTimeout(()=>{ revealContent(); },1200);
 });
@@ -717,8 +825,6 @@ function revealContent(){
   confettiCv.classList.add('show');
   startConfetti();startCountdown();initQuiz();
   document.getElementById('btn-hacker-mode').classList.add('visible');
-  const passSection = document.getElementById('pass-section');
-  if(passSection){ passSection.style.opacity='1'; passSection.style.transform='translateY(0)'; generatePassword(); }
 }
 
 /* ════ CONFETTI ════ */
