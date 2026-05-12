@@ -464,9 +464,10 @@
       <div class="card-sub">07:00 pm<br>Cancha de san Isidro 😎</div>
     </div>
     <div class="card full">
-      <div class="card-label">Dress Code</div>
-      <div class="card-title">Casual Tech Vibes</div>
-      <div class="card-sub">Hoodie, playera de código, merch de tu stack favorito. No hay código de vestimenta que compile mal aquí.</div>
+      <div class="card-icon">⛪</div>
+      <div class="card-label">Misa</div>
+      <div class="card-title">Sabado 30 de Mayo 2026</div>
+      <div class="card-sub">12: 00 pm Capilla de san Isidro</div>
     </div>
   </div>
 
@@ -703,7 +704,7 @@ const confettiCv=document.getElementById('confetti-canvas');
 envelope.addEventListener('click',()=>{
   envelope.classList.add('open');
   setTimeout(()=>scene.classList.add('hide'),900);
-  setTimeout(()=>{ startBootSequence(); },1200);
+  setTimeout(()=>{ revealContent(); },1200);
 });
 
 /* ════ REVEAL CONTENT (called after boot) ════ */
