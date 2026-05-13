@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fotos — Tony | Graduación 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #050810;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(0, 230, 255, 0.15);
+      --cyan: #00e6ff;
+      --gold: #ffd700;
+      --white: #f0f8ff;
+      --muted: rgba(240,248,255,0.5);
+      --glow-cyan: 0 0 20px rgba(0,230,255,0.5), 0 0 60px rgba(0,230,255,0.2);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; overflow-x: hidden; }
+
+    #matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; opacity:0.1; }
+    .grid-overlay { position:fixed; inset:0; z-index:0; background-image:linear-gradient(rgba(0,230,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,255,0.03) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; }
+
+    /* ─── NAV BAR ─── */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(5,8,16,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,230,255,0.1);
+    }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Share Tech Mono', monospace; font-size: 0.75rem;
+      letter-spacing: 0.12em; color: var(--cyan);
+      text-decoration: none; transition: all 0.2s;
+      padding: 7px 16px; border: 1px solid rgba(0,230,255,0.25);
+      border-radius: 100px; background: rgba(0,230,255,0.05);
+    }
+    .nav-back:hover { background: rgba(0,230,255,0.12); border-color: rgba(0,230,255,0.5); }
+    .nav-title {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.18em; color: rgba(240,248,255,0.4);
+    }
+    .nav-badge {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.12em; color: var(--gold);
+      padding: 5px 14px; border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 100px; background: rgba(255,215,0,0.05);
+    }
+
+    /* ─── MAIN ─── */
+    #page-content {
+      position: relative; z-index: 10;
+      max-width: 600px; margin: 0 auto;
+      padding: 100px 24px 80px;
+    }
+
+    .page-header { text-align: center; margin-bottom: 36px; }
+    .page-header-label { font-family:'Share Tech Mono',monospace; font-size:0.7rem; letter-spacing:0.22em; color:var(--cyan); margin-bottom:14px; }
+    .page-header h1 { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(1.8rem,5vw,2.8rem); color:var(--white); margin-bottom:10px; }
+    .page-header p { font-size:0.95rem; color:var(--muted); }
+
+    /* ─── GALLERY ─── */
+    .gallery-wrap {
+      display: flex; justify-content: center; margin-bottom: 20px;
+    }
+    #galWrap {
+      position: relative; width: 100%; max-width: 520px;
+      height: 90vh; overflow: hidden; border-radius: 24px;
+      background: #000; box-shadow: 0 20px 60px rgba(0,0,0,.7), 0 0 40px rgba(0,230,255,0.1);
+      border: 1px solid rgba(0,230,255,0.15);
+    }
+    #storyBars { position:absolute;top:10px;left:10px;right:10px;display:flex;gap:5px;z-index:20; }
+    #galTrack { display:flex;height:100%;transition:transform .5s ease; }
+    .slide { min-width:100%;height:100%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000; }
+    .slide img { width:100%;height:100%;object-fit:contain;background:#000;transition:transform 8s linear; }
+    .slide.active img { transform:scale(1.02); }
+    .bar { flex:1;height:3px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden; }
+    .bar span { display:block;height:100%;width:0%;background:white; }
+    .heart { position:absolute;font-size:80px;color:white;opacity:0;transform:scale(.5);pointer-events:none; }
+    .heart.show { animation:like 1s ease; }
+    @keyframes like { 0%{opacity:0;transform:scale(.5)} 40%{opacity:1;transform:scale(1.3)} 100%{opacity:0;transform:scale(1)} }
+
+    /* Arrows */
+    .gal-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      z-index: 30; width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.1rem; color: rgba(255,255,255,0.7);
+      transition: all 0.2s; backdrop-filter: blur(4px);
+    }
+    .gal-arrow:hover { background: rgba(0,230,255,0.2); border-color: var(--cyan); color: var(--cyan); }
+    .gal-prev { left: 12px; }
+    .gal-next { right: 12px; }
+
+    /* Counter */
+    .gal-counter {
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      z-index: 30; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.5);
+      background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 100px;
+    }
+
+    footer { position:relative; z-index:15; border-top:1px solid rgba(0,230,255,0.1); padding:32px 24px; margin-top:60px; text-align:center; font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:rgba(240,248,255,0.35); letter-spacing:0.06em; }
+    footer strong { color:var(--cyan); }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix-canvas"></canvas>
+<div class="grid-overlay"></div>
+
+<!-- ─── TOP NAV ─── -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-back">← Volver</a>
+  <div class="nav-title">// GALERÍA DE FOTOS</div>
+  <div class="nav-badge">📸 2026</div>
+</nav>
+
+<div id="page-content">
+
+  <div class="page-header">
+    <div class="page-header-label">// MOMENTOS ESPECIALES</div>
+    <h1>Galería de Fotos 📸</h1>
+    <p>Desliza o usa las flechas para navegar · Doble tap para dar like ❤️</p>
+  </div>
+
+  <div class="gallery-wrap">
+    <div id="galWrap">
+      <div id="storyBars"></div>
+      <div id="galTrack">
+        <div class="slide"><img src="FOTO1.jpg"><div class="heart">❤</div></div>
+        <div class="slide"><img src="FOTO2.jpg"><div class="heart">❤</div></div>
+        <div class="slide"><img src="FOTO3.jpg"><div class="heart">❤</div></div>
+        <div class="slide"><img src="FOTO4.jpg"><div class="heart">❤</div></div>
+        <div class="slide"><img src="FOTO5.jpg"><div class="heart">❤</div></div>
+      </div>
+      <button class="gal-arrow gal-prev" id="gal-prev">◀</button>
+      <button class="gal-arrow gal-next" id="gal-next">▶</button>
+      <div class="gal-counter" id="gal-counter">1 / 5</div>
+    </div>
+  </div>
+
+  <footer>
+    <strong>ANGEL ANTONIO</strong> · Graduación 2026 · <a href="index.html" style="color:var(--cyan);text-decoration:none;">← Inicio</a>
+  </footer>
+</div>
+
+<script>
+/* ════ MATRIX BG ════ */
+(function(){
+  const cv=document.getElementById('matrix-canvas'),ctx=cv.getContext('2d');
+  let cols,drops;
+  const chars='01アイウエオカキクケコ<>{}[]//==&&||';
+  function init(){cv.width=innerWidth;cv.height=innerHeight;cols=Math.floor(cv.width/20);drops=Array(cols).fill(1);}
+  function draw(){ctx.fillStyle='rgba(5,8,16,0.05)';ctx.fillRect(0,0,cv.width,cv.height);ctx.fillStyle='#00ff41';ctx.font='13px Share Tech Mono,monospace';drops.forEach((y,i)=>{ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*20,y*20);if(y*20>cv.height&&Math.random()>0.975)drops[i]=0;drops[i]++;});}
+  init();addEventListener('resize',init);setInterval(draw,60);
+})();
+
+/* ════ GALLERY ════ */
+(function(){
+  const slides=document.querySelectorAll('.slide');
+  const track=document.getElementById('galTrack');
+  const wrap=document.getElementById('galWrap');
+  const bars=document.getElementById('storyBars');
+  const counter=document.getElementById('gal-counter');
+  let cur=0,timer,duration=8000;
+  slides.forEach(()=>{let b=document.createElement('div');b.className='bar';b.innerHTML='<span></span>';bars.appendChild(b);});
+  function go(n){
+    cur=(n+slides.length)%slides.length;
+    track.style.transform=`translateX(-${cur*100}%)`;
+    slides.forEach(s=>s.classList.remove('active'));
+    slides[cur].classList.add('active');
+    counter.textContent=`${cur+1} / ${slides.length}`;
+    resetBars();animateBar();
+  }
+  function resetBars(){document.querySelectorAll('.bar span').forEach((b,i)=>{b.style.transition='none';b.style.width=i<cur?'100%':'0%';});}
+  function animateBar(){let bar=document.querySelectorAll('.bar span')[cur];bar.style.transition=`width ${duration}ms linear`;setTimeout(()=>bar.style.width='100%',50);}
+  function auto(){clearInterval(timer);timer=setInterval(()=>go(cur+1),duration);}
+  go(0);auto();
+
+  // Arrow buttons
+  document.getElementById('gal-prev').addEventListener('click',()=>{clearInterval(timer);go(cur-1);auto();});
+  document.getElementById('gal-next').addEventListener('click',()=>{clearInterval(timer);go(cur+1);auto();});
+
+  // Touch swipe
+  let startX=0;
+  wrap.addEventListener('touchstart',e=>{clearInterval(timer);startX=e.touches[0].clientX;});
+  wrap.addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-startX;if(dx<-50)go(cur+1);if(dx>50)go(cur-1);auto();});
+
+  // Double-tap like
+  slides.forEach(slide=>{
+    let lastTap=0;
+    slide.addEventListener('touchend',function(){
+      let now=new Date().getTime();
+      if(now-lastTap<300){let heart=slide.querySelector('.heart');heart.classList.add('show');setTimeout(()=>heart.classList.remove('show'),1000);}
+      lastTap=now;
+    });
+    // Mouse double-click
+    slide.addEventListener('dblclick',function(){
+      let heart=slide.querySelector('.heart');heart.classList.add('show');setTimeout(()=>heart.classList.remove('show'),1000);
+    });
+  });
+})();
+</script>
+</body>
+</html>
