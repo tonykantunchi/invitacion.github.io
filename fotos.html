@@ -115,7 +115,7 @@
 
 <!-- ─── TOP NAV ─── -->
 <nav class="top-nav">
-  <a href="index.html" class="nav-back">← Volver</a>
+  <a href="index.html?opened=true" class="nav-back">← Volver</a>
   <div class="nav-title">// GALERÍA DE FOTOS</div>
   <div class="nav-badge">📸 2026</div>
 </nav>
@@ -123,7 +123,7 @@
 <div id="page-content">
 
   <div class="page-header">
-    <div class="page-header-label">// MOMENTOS ESPECIALES</div>
+    <div class="page-header-label">// GRACIAS POR ENSEÑARME</div>
     <h1>Galería de Fotos 📸</h1>
     <p>Desliza o usa las flechas para navegar · Doble tap para dar like ❤️</p>
   </div>
@@ -150,6 +150,18 @@
 </div>
 
 <script>
+/* ════ AUTOPLAY AUDIO DESDE INDEX ════ */
+(function(){
+  const audioFile = sessionStorage.getItem('autoplay_audio');
+  if(audioFile){
+    sessionStorage.removeItem('autoplay_audio');
+    const snd = new Audio(audioFile);
+    snd.volume = 1;
+    const p = snd.play();
+    if(p !== undefined) p.catch(()=>{});
+  }
+})();
+
 /* ════ MATRIX BG ════ */
 (function(){
   const cv=document.getElementById('matrix-canvas'),ctx=cv.getContext('2d');

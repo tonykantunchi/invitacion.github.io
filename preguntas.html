@@ -110,7 +110,7 @@
 
 <!-- ─── TOP NAV ─── -->
 <nav class="top-nav">
-  <a href="index.html" class="nav-back">← Volver</a>
+  <a href="index.html?opened=true" class="nav-back">← Volver</a>
   <div class="nav-title">// QUIZ INTERACTIVO</div>
   <div class="nav-badge">🎓 2026</div>
 </nav>
@@ -145,6 +145,18 @@
 </div>
 
 <script>
+/* ════ AUTOPLAY AUDIO DESDE INDEX ════ */
+(function(){
+  const audioFile = sessionStorage.getItem('autoplay_audio');
+  if(audioFile){
+    sessionStorage.removeItem('autoplay_audio');
+    const snd = new Audio(audioFile);
+    snd.volume = 1;
+    const p = snd.play();
+    if(p !== undefined) p.catch(()=>{});
+  }
+})();
+
 /* ════ MATRIX BG ════ */
 (function(){
   const cv=document.getElementById('matrix-canvas'),ctx=cv.getContext('2d');
@@ -184,7 +196,24 @@ function initQuiz(){currentQ=0;score=0;answered=false;document.getElementById('q
 function renderQuestion(idx){const wrap=document.getElementById('quiz-q-wrap');wrap.innerHTML='';const p=PREGUNTAS[idx],div=document.createElement('div');div.className='quiz-question active';const letters=['A','B','C','D'];div.innerHTML=`<div class="q-num">PREGUNTA ${idx+1} / ${PREGUNTAS.length}</div><div class="q-text">${p.q}</div><div class="q-options">${p.opts.map((o,i)=>`<div class="q-option" onclick="selectOption(${i},${p.correct})"><div class="opt-letter">${letters[i]}</div><span>${o}</span></div>`).join('')}</div><div class="quiz-feedback" id="q-feedback"></div>`;wrap.appendChild(div);answered=false;}
 function selectOption(selected,correct){if(answered)return;answered=true;const opts=document.querySelectorAll('.q-option');const feedback=document.getElementById('q-feedback');const p=PREGUNTAS[currentQ];opts[selected].classList.add(selected===correct?'correct':'wrong');if(selected!==correct)opts[correct].classList.add('correct');opts.forEach(o=>o.style.pointerEvents='none');if(selected===correct){score++;feedback.textContent=p.goodMsg;feedback.className='quiz-feedback show good';}else{feedback.textContent=p.badMsg;feedback.className='quiz-feedback show bad';}setTimeout(()=>{const wrap=document.getElementById('quiz-q-wrap');const cur=wrap.querySelector('.quiz-question');if(cur)cur.classList.add('exit-left');setTimeout(()=>{currentQ++;if(currentQ<PREGUNTAS.length){renderQuestion(currentQ);updateProgress();}else showQuizEnd();},400);},1800);}
 function updateProgress(){document.getElementById('quiz-fill').style.width=(currentQ/PREGUNTAS.length*100)+'%';}
-function showQuizEnd(){document.getElementById('quiz-q-wrap').innerHTML='';document.getElementById('quiz-fill').style.width='100%';document.getElementById('quiz-score').textContent=`${score}/${PREGUNTAS.length}`;let msg='';if(score>=8)msg='🏆 ¡ERES EL/LA MEJOR AMIGO/A DE TONY! Nivel: God Mode';else if(score>=6)msg='🎯 ¡Buen nivel! Definitivamente lo conoces bien 😄';else if(score>=3)msg='🤔 Lo conoces un poco... toca pasar más tiempo juntos';else msg='💀 Oof. ¿Seguro que conoces a Tony? 😂 No te preocupes, hoy lo celebramos juntos';document.getElementById('quiz-end-msg').textContent=msg;document.getElementById('quiz-end').classList.add('show');if(score>=6)startConfetti();}
+function showQuizEnd(){
+  document.getElementById('quiz-q-wrap').innerHTML='';
+  document.getElementById('quiz-fill').style.width='100%';
+  document.getElementById('quiz-score').textContent=`${score}/${PREGUNTAS.length}`;
+  let msg='';
+  if(score>=8)msg='🏆 ¡ERES EL/LA MEJOR AMIGO/A DE TONY! Nivel: God Mode';
+  else if(score>=6)msg='🎯 ¡Buen nivel! Definitivamente lo conoces bien 😄';
+  else if(score>=3)msg='🤔 Lo conoces un poco... toca pasar más tiempo juntos';
+  else msg='💀 Oof. ¿Seguro que conoces a Tony? 😂 No te preocupes, hoy lo celebramos juntos';
+  document.getElementById('quiz-end-msg').textContent=msg;
+  document.getElementById('quiz-end').classList.add('show');
+  /* ── Audio al terminar ── */
+  const audioFin = new Audio('audio_quiz_fin.mp3');
+  audioFin.volume = 1;
+  const p = audioFin.play();
+  if(p !== undefined) p.catch(()=>{});
+  if(score>=6)startConfetti();
+}
 function resetQuiz(){document.getElementById('quiz-end').classList.remove('show');initQuiz();}
 
 initQuiz();

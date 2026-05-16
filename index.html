@@ -533,15 +533,15 @@
   <div class="nav-section">
     <div class="nav-section-label">// EXPLORAR MÁS</div>
     <div class="nav-cards">
-      <a href="preguntas.html" class="nav-card">
+      <a href="preguntas.html" class="nav-card" onclick="playAndGo(event,'audio_preguntas.mp3','preguntas.html')">
         <div class="nav-card-icon">🧠</div>
         <div class="nav-card-title">¿Me conoces?</div>
         <div class="nav-card-sub">// ENCUESTA SOBRE TONY</div>
       </a>
-      <a href="fotos.html" class="nav-card">
+      <a href="fotos.html" class="nav-card" onclick="playAndGo(event,'audio_galeria.mp3','fotos.html')">
         <div class="nav-card-icon">📸</div>
-        <div class="nav-card-title">CANTANTE FAVORITO</div>
-        <div class="nav-card-sub">// DUKI</div>
+        <div class="nav-card-title">ADMIRACION</div>
+        <div class="nav-card-sub">// PERSONAS QUE ADMIRA</div>
       </a>
     </div>
   </div>
@@ -701,6 +701,14 @@ function startCountdown(){
   },1000);
 }
 
+/* ════ AUDIO NAV ════ */
+function playAndGo(e, audioFile, dest){
+  e.preventDefault();
+  // Guarda qué audio debe sonar y navega de inmediato
+  sessionStorage.setItem('autoplay_audio', audioFile);
+  window.location.href = dest;
+}
+
 /* ════ BOOT SEQUENCE ════ */
 (function(){
   const cv=document.getElementById('boot-scanlines-cv');
@@ -778,6 +786,70 @@ function skipBoot(){
   overlay.classList.add('fade-out');
   setTimeout(()=>{overlay.style.display='none';document.body.style.overflow='';revealContent();},400);
 }
+
 </script>
+
+<script>
+/* ════════════════════════════════════════
+   VOLVER DESPUÉS DEL SOBRE
+════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", () => {
+
+  const params = new URLSearchParams(window.location.search);
+  const opened = params.get("opened") === "true";
+
+  const envelopeScene = document.getElementById("envelope-scene");
+  const mainContent = document.getElementById("main-content");
+  const welcomeBar = document.getElementById("welcome-bar");
+  const bootOverlay = document.getElementById("boot-overlay");
+
+  // Si viene desde preguntas.html o fotos.html
+  if (opened) {
+
+    // Ocultar sobre
+    if (envelopeScene) {
+      envelopeScene.style.display = "none";
+    }
+
+    // Ocultar overlays si existen
+    if (welcomeBar) {
+      welcomeBar.style.display = "none";
+    }
+
+    if (bootOverlay) {
+      bootOverlay.style.display = "none";
+    }
+
+    // Mostrar contenido principal directamente
+    if (mainContent) {
+      mainContent.classList.add("show");
+      mainContent.style.opacity = "1";
+      mainContent.style.pointerEvents = "auto";
+      mainContent.style.transform = "translateY(0) scale(1)";
+    }
+
+    // Activar efectos visuales si existen
+    const matrixCanvas = document.getElementById("matrix-canvas");
+    const matrixOverlay = document.getElementById("matrix-overlay");
+    const vignette = document.getElementById("vignette");
+
+    if (matrixCanvas) matrixCanvas.classList.add("visible");
+    if (matrixOverlay) matrixOverlay.classList.add("show");
+    if (vignette) vignette.classList.add("show");
+
+    // Inicializar efectos principales si la función existe
+    if (typeof startMatrixOverlay === "function") startMatrixOverlay();
+    if (typeof startCountdown === "function") startCountdown();
+
+    // Mostrar botón hacker si existe
+    const hackerBtn = document.getElementById("btn-hacker-mode");
+    if (hackerBtn) hackerBtn.classList.add("visible");
+
+    // Limpiar URL
+    history.replaceState({}, document.title, "index.html");
+  }
+});
+</script>
+
 </body>
 </html>
